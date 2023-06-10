@@ -1,11 +1,11 @@
 import Grid
 
 class Cell :
-    def __init__(self, x, y, alive, color):
+    def __init__(self, x, y, alive):
         self.X = x
         self.Y = y
         self.Alive = alive
-        self.Color = color
+        self.HasChanged = False
 
 
     def nbNeighbours(self, grid:Grid):
@@ -40,6 +40,7 @@ class Cell :
             @input : nothing
             @output : (bool) -> isAlive
         """
+        tempAlive = self.Alive
         nbNeighbours = self.nbNeighbours(grid)
 
         if(self.Alive):
@@ -51,6 +52,12 @@ class Cell :
             if(nbNeighbours == 3):
                 self.Alive = True
         
+        #check if the cell has changed :
+        if(tempAlive != self.Alive):
+            self.HasChanged = True
+        else:
+            self.HasChanged = False
+            
         
 
         
