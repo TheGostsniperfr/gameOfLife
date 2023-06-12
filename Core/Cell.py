@@ -1,4 +1,3 @@
-import Grid
 
 class Cell :
     def __init__(self, x, y, alive):
@@ -6,9 +5,10 @@ class Cell :
         self.Y = y
         self.Alive = alive
         self.HasChanged = False
+        self.Rect = None
 
 
-    def nbNeighbours(self, grid:Grid):
+    def nbNeighbours(self, grid):
         """
         Parameter :
             @input : (cell[][]) -> grid
@@ -38,7 +38,6 @@ class Cell :
         
         Parameters : 
             @input : nothing
-            @output : (bool) -> isAlive
         """
         tempAlive = self.Alive
         nbNeighbours = self.nbNeighbours(grid)
