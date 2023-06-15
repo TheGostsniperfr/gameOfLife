@@ -1,5 +1,6 @@
 import tkinter as tk
 from Core.Cell import Cell
+import copy
 
 class Grid :
     def __init__(self, width, height, gridLineColor, cellSize, cellColor , fenetreBgColor):
@@ -11,6 +12,8 @@ class Grid :
         self.Canvas = None
         self.FenetreBgColor = fenetreBgColor
         self.Fenetre = tk.Tk()
+        self.nbIteration = 0
+        self.NbIterationUI = None
         
 
         self.Canvas = tk.Canvas(self.Fenetre, width= (self.Width) * self.CellSize +1, height=(self.Height) * self.CellSize+1) 
@@ -21,9 +24,12 @@ class Grid :
         for x in range(self.Width):
             tempLine = []
             for y in range(self.Height):
-                tempLine.append(Cell(x,y,False))
+                tempLine.append(Cell(x,y,False, (self.Width, self.Height)))
 
             self.Grid.append(tempLine)
+            
+        
+
 
 
         
@@ -31,24 +37,34 @@ class Grid :
         """
         this function update all cells contened in the grid
         """
+        #add one iteration
+        self.nbIteration += 1
+        self.NbIterationUI.config(text=str(self.nbIteration))
+        
+        
+        #copy the current grid
+        currentGrid = copy.deepcopy(self.Grid)
+        
         for x in range(self.Width):
             for y in range(self.Height):
-                if(self.Grid[x][y].Alive):
-                    self.Grid[x][y].update(self.Grid)
+                cell = self.Grid[x][y]
+                cell.update(currentGrid)                
+                if(cell.HasChanged):
+                    if(cell.Alive):
+                        self.Canvas.itemconfig(self.Grid[x][y].Rect, fill=self.CellColor)
+                    else:
+                        self.Canvas.itemconfig(self.Grid[x][y].Rect, fill=self.FenetreBgColor)
+                                            
+        self.Fenetre.update()
 
-    def isValidCoordonate(self, x, y):
-        """
-        check if the coordonate x, y in valid in the grid
+
+    def createDisplay(self):       
         
-        Parameters :
-            @input :    (int) -> x
-                        (int) -> y
-                        
-            @output :   (bool) -> isValid                    
-        """
-        return (x >= 0 and y >= 0) and (x < self.Width and y < self.Height)
-    
-    def createDisplay(self):
+        # *****************************************************************************
+        # *                                                                           *
+        # *                            Grid generation                                 *
+        # *                                                                           *
+        # *****************************************************************************
         for x in range(self.Width):
             for y in range(self.Height):
                 cell = self.Grid[x][y]
@@ -68,10 +84,35 @@ class Grid :
                 #add event, on click for rect
                 self.Canvas.tag_bind(cell.Rect, "<Button-1>", lambda event, X=x, Y=y: self.rectIsClicked(event, X, Y))  
 
-                        
+
+
+        # *****************************************************************************
+        # *                                                                           *
+        # *                            UI generation                                 *
+        # *                                                                           *
+        # *****************************************************************************
+        
+        #start btn
+        launchBtn = tk.Button(self.Fenetre, text="Start", command=self.launchGame)
+        launchBtn.pack(side=tk.BOTTOM, pady=10)
+        
+        #nb of iteration UI
+        self.NbIterationUI = tk.Label(self.Fenetre, text = str(self.nbIteration))
+        self.NbIterationUI.pack(side=tk.BOTTOM, anchor=tk.CENTER)
+    
+        # *****************************************************************************
+        # *                                                                           *
+        # *                            Update fenetre                                *
+        # *                                                                           *
+        # *****************************************************************************
+          
         self.Fenetre.update()
 
-        
+
+    
+
+
+    #Event function called by cell btn 
     def rectIsClicked(self, event, x, y):
         #switch the cell
         
@@ -82,8 +123,10 @@ class Grid :
 
         self.Grid[x][y].Alive ^= True
         self.Grid[x][y].HasChanged = True
-        
-       
+    
+    #Command function called by launch btn
+    def launchGame(self):
+        self.update()
         
         
 

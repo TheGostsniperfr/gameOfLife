@@ -1,13 +1,13 @@
 
 class Cell :
-    def __init__(self, x, y, alive):
+    def __init__(self, x, y, alive, gridSize):
         self.X = x
         self.Y = y
         self.Alive = alive
         self.HasChanged = False
         self.Rect = None
-
-
+        self.GridSize = gridSize
+        
     def nbNeighbours(self, grid):
         """
         Parameter :
@@ -24,13 +24,26 @@ class Cell :
             (tempX, tempY) = (self.X + potentialNeighbors[i][0], self.Y + potentialNeighbors[i][1])
 
             #check if is valid coordonate
-            grid.Grid.isValidCoordonate(tempX, tempY)
+            if(self.isValidCoordonate(tempX, tempY)):
 
-            #check if the cell at the coordonates is not empty
-            if(grid[tempX][tempY].Alive):
-                nbNeighbours += 1            
+                #check if the cell at the coordonates is not empty
+                if(grid[tempX][tempY].Alive):
+                    nbNeighbours += 1            
 
         return nbNeighbours
+    
+    def isValidCoordonate(self, x, y):
+        """
+        check if the coordonate x, y in valid in the grid
+        
+        Parameters :
+            @input :    (int) -> x
+                        (int) -> y
+                        
+            @output :   (bool) -> isValid                    
+        """
+        return (x >= 0 and y >= 0) and (x < self.GridSize[0] and y < self.GridSize[1])
+    
     
     def update(self, grid):
         """
