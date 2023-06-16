@@ -17,7 +17,7 @@ class Cell :
         nbNeighbours = 0
 
         #array of neighbours'coordonate  -> (x,y)
-        potentialNeighbors = [(0, -1), (-1, 0), (1,0), (0,1)]
+        potentialNeighbors = [(-1,1),(0,1),(1,1),(-1,0),(1,0),(-1,-1),(0,-1),(1,-1)]
 
         for i in range(len(potentialNeighbors)):
 

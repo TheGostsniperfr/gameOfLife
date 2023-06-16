@@ -1,5 +1,5 @@
 from Core.Grid import Grid
 
 
-test = Grid(10, 10, "black",30 , "orange", "white")
+test = Grid(100, 100, "black",6 , "orange", "white")
 test.start()

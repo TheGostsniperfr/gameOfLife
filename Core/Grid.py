@@ -28,6 +28,8 @@ class Grid :
 
             self.Grid.append(tempLine)
             
+        self.IsLaunch = False
+            
         
 
 
@@ -85,16 +87,22 @@ class Grid :
                 self.Canvas.tag_bind(cell.Rect, "<Button-1>", lambda event, X=x, Y=y: self.rectIsClicked(event, X, Y))  
 
 
-
         # *****************************************************************************
         # *                                                                           *
         # *                            UI generation                                 *
         # *                                                                           *
         # *****************************************************************************
         
-        #start btn
-        launchBtn = tk.Button(self.Fenetre, text="Start", command=self.launchGame)
+        #launch btn
+        launchBtn = tk.Button(self.Fenetre, text = "start", command = self.launchBtn)
         launchBtn.pack(side=tk.BOTTOM, pady=10)
+                
+        #+1 btn
+        oneIterationBtn = tk.Button(self.Fenetre, text="+1", command=self.oneIteration)
+        oneIterationBtn.pack(side=tk.BOTTOM, pady=10)
+        
+        
+        
         
         #nb of iteration UI
         self.NbIterationUI = tk.Label(self.Fenetre, text = str(self.nbIteration))
@@ -125,8 +133,14 @@ class Grid :
         self.Grid[x][y].HasChanged = True
     
     #Command function called by launch btn
-    def launchGame(self):
+    def oneIteration(self):
         self.update()
+        
+    def launchBtn(self):
+       self.IsLaunch ^= True 
+       
+       while(self.IsLaunch):
+           self.update()
         
         
 
