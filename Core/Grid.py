@@ -1,6 +1,7 @@
 import tkinter as tk
 from Core.Cell import Cell
 import copy
+import threading
 
 class Grid :
     def __init__(self, width, height, gridLineColor, cellSize, cellColor , fenetreBgColor):
@@ -57,7 +58,7 @@ class Grid :
                     else:
                         self.Canvas.itemconfig(self.Grid[x][y].Rect, fill=self.FenetreBgColor)
                                             
-        self.Fenetre.update()
+        #self.Fenetre.update()
 
 
     def createDisplay(self):       
@@ -139,10 +140,17 @@ class Grid :
     def launchBtn(self):
        self.IsLaunch ^= True 
        
-       while(self.IsLaunch):
-           self.update()
+       if(self.IsLaunch):
+           #start the loop in a new thread
+            threading.Thread(target=self.loop).start()   
+            
         
-        
+       
+    def loop(self):
+        while(self.IsLaunch):
+            self.update()
+
+
 
     def start(self):
         
