@@ -50,7 +50,7 @@ class Cell :
         this function update the cell
         
         Parameters : 
-            @input : nothing
+            @input : (Grid) -> grid : current grid of the game 
         """
         tempAlive = self.Alive
         nbNeighbours = self.nbNeighbours(grid)

@@ -1,7 +1,7 @@
 import tkinter as tk
 from Core.Cell import Cell
-import copy
-import threading
+import copy, threading, random
+ 
 
 class Grid :
     def __init__(self, width, height, gridLineColor, cellSize, cellColor , fenetreBgColor):
@@ -57,10 +57,27 @@ class Grid :
                         self.Canvas.itemconfig(self.Grid[x][y].Rect, fill=self.CellColor)
                     else:
                         self.Canvas.itemconfig(self.Grid[x][y].Rect, fill=self.FenetreBgColor)
+                        
+    def randomGrid(self, chaos):
+        """
+        this function generate a random grid, each cell is set with a percentage of chaos
+        
+        Parameters :
+            @input :
+                -(float) -> chaos : number between 0 and 1 which set the percentage of luck to set a cell on
+        """
+        
+        for x in range(self.Width):
+            for y in range(self.Height):
+                if(random.uniform(0, 1) > chaos):
+                    self.switchCell(x, y, True)
+                else:
+                    self.switchCell(x, y, False)
+                    
+                
+
+       
                                             
-        #self.Fenetre.update()
-
-
     def createDisplay(self):       
         
         # *****************************************************************************
@@ -116,8 +133,6 @@ class Grid :
         # *****************************************************************************
           
         self.Fenetre.update()
-
-
     
 
 
@@ -126,13 +141,31 @@ class Grid :
         #switch the cell
         
         if(self.Grid[x][y].Alive):
-            self.Canvas.itemconfig(self.Grid[x][y].Rect, fill=self.FenetreBgColor)
+            self.switchCell(x, y, False)
         else:
-            self.Canvas.itemconfig(self.Grid[x][y].Rect, fill=self.CellColor)
-
-        self.Grid[x][y].Alive ^= True
-        self.Grid[x][y].HasChanged = True
+            self.switchCell(x, y, True)
     
+        
+    def switchCell(self, x, y, state):
+        """
+        this function switch the cell state by the value of state parameters
+        
+        @inputs :
+            -(int) -> x : coordonate x of the cell to edit
+            -(int) -> y : coordonate y of the cell to edit
+            -(bool) -> state : new state of the cell
+        """
+        
+        if(state):
+            self.Canvas.itemconfig(self.Grid[x][y].Rect, fill=self.CellColor)
+        else:
+            self.Canvas.itemconfig(self.Grid[x][y].Rect, fill=self.FenetreBgColor)           
+            
+        self.Grid[x][y].Alive = state
+        self.Grid[x][y].HasChanged = True
+        
+        
+  
     #Command function called by launch btn
     def oneIteration(self):
         self.update()
@@ -156,6 +189,8 @@ class Grid :
         
         self.createDisplay()
                 
+        self.randomGrid(0.5)
+        
         self.Fenetre.mainloop()
 
 
